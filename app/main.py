@@ -4,7 +4,7 @@ import sys
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
     #print("Logs from your program will appear here!")
-    valid_commands = ["exit 0","echo"]
+    valid_commands = ["exit","echo","type"]
 
     #REPL loop
     while True:
@@ -18,6 +18,11 @@ def main():
                 break
         elif args[0] == "echo":
             sys.stdout.write(" ".join(args[1:]) + "\n")
+        elif args[0] == "type":
+            if args[1] in valid_commands:
+                sys.stdout.write(f"{args[1]} is a shell builtin\n")
+            else:
+                sys.stdout.write(f"{args[1]} not found\n")
         else:
             sys.stdout.write(f"{command}: command not found\n")
 
