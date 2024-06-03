@@ -1,16 +1,12 @@
 import sys
-
+import os
 
 def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    #print("Logs from your program will appear here!")
     valid_commands = ["exit","echo","type"]
-
-    #REPL loop
+    PATH = os.environ.get('PATH')
     while True:
         sys.stdout.write(f"$ ")
         sys.stdout.flush()
-        # Wait for user input
         command = input()
         args = command.split(" ")
         if args[0] == "exit":
@@ -19,12 +15,21 @@ def main():
         elif args[0] == "echo":
             sys.stdout.write(" ".join(args[1:]) + "\n")
         elif args[0] == "type":
-            if args[1] in valid_commands:
-                sys.stdout.write(f"{args[1]} is a shell builtin\n")
-            else:
-                sys.stdout.write(f"{args[1]} not found\n")
+            cmd = command.split(" ")[1]
+            cmd_path = None
+            paths = PATH.split(":")
+            for path in paths:
+                if os.path.isfile(f"{path}/{cmd}"):
+                    cmd_path = f"{path}/{cmd}"
+            if cmd in valid_commands:
+                sys.stdout.write(f"{cmd} is a shell builtin\n")
+            elif cmd_path:
+                sys.stdout.write(f"{cmd} is {cmd_path}\n")
+            elif cmd not in valid_commands:
+                sys.stdout.write(f"{command.split(" ")[1]} not found\n")
         else:
             sys.stdout.write(f"{command}: command not found\n")
+            sys.stdout.flush()
 
 
 
